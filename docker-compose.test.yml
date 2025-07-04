@@ -17,6 +17,7 @@ services:
       - ./scripts:/app/scripts
     environment:
       - NODE_ENV=test
+      - LOG_LEVEL=info
       - DB_HOST=mysql-test
       - DB_PORT=3306
       - DB_USER=url-shortener
