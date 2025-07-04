@@ -19,3 +19,9 @@ export class NotFoundError extends AppError {
 		super('Not Found', 404);
 	}
 }
+
+export class GoneError extends AppError {
+	constructor() {
+		super('Gone', 410);
+	}
+}
