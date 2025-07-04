@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { PostShortenBody, PostShortenResponse } from '../schemas/index';
 import { createCodeForUrl } from '../managers/urls';
-import { POST_SHORTEN_RATE_LIMITS_REQ_PER_MIN } from '../configs';
+import { DEFAULT_RATE_LIMITS_REQS } from '../configs';
 
 export async function postShorten(app: FastifyInstance) {
 	app.post<{
@@ -15,7 +15,7 @@ export async function postShorten(app: FastifyInstance) {
 			},
 			// rate limits are handled by src/plugins/rate-limiter.ts Fastify plugin
 			rateLimits: {
-				maxReqPerMin: POST_SHORTEN_RATE_LIMITS_REQ_PER_MIN,
+				maxReqPerInverval: DEFAULT_RATE_LIMITS_REQS,
 			},
 		},
 		handler: async (req) => {

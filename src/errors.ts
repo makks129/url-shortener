@@ -25,3 +25,9 @@ export class GoneError extends AppError {
 		super('Gone', 410);
 	}
 }
+
+export class TooManyRequestsError extends AppError {
+	constructor() {
+		super('Too Many Requests', 429);
+	}
+}

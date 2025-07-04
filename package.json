@@ -22,19 +22,21 @@
 	"author": "Max Goldenberg",
 	"license": "ISC",
 	"dependencies": {
-		"ts-node": "^10.9.2",
-		"fastify": "^5.4.0",
 		"@fastify/type-provider-typebox": "^5.1.0",
+		"@types/node-cache": "^4.2.5",
+		"fastify": "^5.4.0",
 		"fastify-plugin": "^5.0.1",
 		"knex": "^3.1.0",
-		"mysql2": "^3.14.1"
+		"mysql2": "^3.14.1",
+		"node-cache": "^5.1.2",
+		"ts-node": "^10.9.2"
 	},
 	"devDependencies": {
-		"typescript": "^5.8.3",
 		"@jest/globals": "^30.0.4",
 		"@types/jest": "^30.0.0",
 		"@types/node": "^24.0.10",
 		"jest": "^30.0.4",
-		"ts-jest": "^29.4.0"
+		"ts-jest": "^29.4.0",
+		"typescript": "^5.8.3"
 	}
 }
