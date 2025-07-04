@@ -2,6 +2,7 @@ import fastify, { FastifyInstance } from 'fastify';
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import db from './plugins/db';
 import rateLimiter from './plugins/rate-limiter';
+import metrics from './plugins/metrics';
 import { routes } from './routes';
 import { DEFAULT_RATE_LIMITS_REQS } from './configs';
 import { logger } from './plugins/logger';
@@ -13,6 +14,8 @@ export async function buildApp(): Promise<FastifyInstance> {
 	});
 
 	app.withTypeProvider<TypeBoxTypeProvider>();
+
+	app.register(metrics);
 
 	app.register(db);
 
