@@ -1,9 +1,7 @@
 import { FastifyRequest } from 'fastify';
 import { generateRandomCode } from './code-generator';
 import { GoneError, NotFoundError } from '../../errors';
-
-const CODE_LENGTH = 6;
-const SHORT_URL_EXPIRATION_TIME_MS = 24 * 60 * 60 * 1000; // 24 hours
+import { SHORT_URL_CODE_LENGTH, SHORT_URL_EXPIRATION_TIME_MS } from '../../configs';
 
 type CreateCodeResponse = {
 	code: string;
@@ -14,7 +12,7 @@ export async function createCodeForUrl(
 	url: string,
 	oneTime?: boolean,
 ): Promise<CreateCodeResponse> {
-	const code = generateRandomCode(CODE_LENGTH);
+	const code = generateRandomCode(SHORT_URL_CODE_LENGTH);
 
 	await req
 		.db('urls')
