@@ -1,0 +1,40 @@
+{
+	"name": "url-shortener",
+	"version": "1.0.0",
+	"description": "url-shortener",
+	"main": "index.js",
+	"scripts": {
+		"build": "tsc",
+		"start": "node dist/src/index.js",
+		"dev": "tsc -w & node --watch dist/src/index.js",
+		"test": "NODE_OPTIONS=--experimental-vm-modules jest --verbose --expand --color --runInBand --detectOpenHandles",
+		"test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch --verbose --expand --color --runInBand --detectOpenHandles",
+		"test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+		"test:unit": "NODE_OPTIONS=--experimental-vm-modules jest test/unit --verbose --expand --color --runInBand --detectOpenHandles",
+		"test:e2e": "NODE_OPTIONS=--experimental-vm-modules jest test/e2e --verbose --expand --color --runInBand --detectOpenHandles",
+		"docker:build": "docker-compose build",
+		"docker:up": "docker-compose up",
+		"docker:down": "docker-compose down",
+		"docker:dev": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up",
+		"docker:logs": "docker-compose logs -f",
+		"docker:test": "./scripts/run-e2e-tests.sh"
+	},
+	"author": "Max Goldenberg",
+	"license": "ISC",
+	"dependencies": {
+		"ts-node": "^10.9.2",
+		"fastify": "^5.4.0",
+		"@fastify/type-provider-typebox": "^5.1.0",
+		"fastify-plugin": "^5.0.1",
+		"knex": "^3.1.0",
+		"mysql2": "^3.14.1"
+	},
+	"devDependencies": {
+		"typescript": "^5.8.3",
+		"@jest/globals": "^30.0.4",
+		"@types/jest": "^30.0.0",
+		"@types/node": "^24.0.10",
+		"jest": "^30.0.4",
+		"ts-jest": "^29.4.0"
+	}
+}

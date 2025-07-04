@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: npm run dev
+    volumes:
+      - ./src:/app/src
+      - ./dist:/app/dist
+      - ./test:/app/test
+      - ./package.json:/app/package.json
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./jest.config.ts:/app/jest.config.ts
+    environment:
+      - NODE_ENV=development
+      - NODE_OPTIONS=--inspect=0.0.0.0:9229
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=url-shortener
+      - DB_PASSWORD=password
+      - DB_NAME=url-shortener
+    ports:
+      - "3000:3000"
+      - "9229:9229" # debug
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=url-shortener
+      - MYSQL_USER=url-shortener
+      - MYSQL_PASSWORD=password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --sql-mode="STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION" --general-log=1 --general-log-file=/var/log/mysql/query.log
+
+volumes:
+  mysql-data:

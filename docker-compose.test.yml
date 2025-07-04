@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  app-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: npm run test
+    volumes:
+      - ./src:/app/src
+      - ./dist:/app/dist
+      - ./test:/app/test
+      - ./package.json:/app/package.json
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./jest.config.ts:/app/jest.config.ts
+      - ./coverage:/app/coverage
+      - ./scripts:/app/scripts
+    environment:
+      - NODE_ENV=test
+      - DB_HOST=mysql-test
+      - DB_PORT=3306
+      - DB_USER=url-shortener
+      - DB_PASSWORD=password
+      - DB_NAME=url-shortener
+    depends_on:
+      mysql-test:
+        condition: service_healthy
+
+  mysql-test:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=url-shortener
+      - MYSQL_USER=url-shortener
+      - MYSQL_PASSWORD=password
+    ports:
+      - "3306:3306"
+    tmpfs:
+      # Use tmpfs for the MySQL data directory to speed up tests and avoid persistence between test runs
+      - /var/lib/mysql
+    # Healthcheck is needed to ensure MySQL is ready before running tests
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "url-shortener", "-ppassword"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --sql-mode="STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION"
+      --innodb_buffer_pool_size=64M
+      --innodb_log_buffer_size=8M
+      --max_connections=10
+      --innodb_doublewrite=0
+      --innodb_flush_log_at_trx_commit=0

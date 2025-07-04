@@ -1,0 +1,36 @@
+# Node modules
+node_modules
+
+# Build output
+dist
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Docker
+.docker
+docker-compose*.yml
+Dockerfile*
+
+# Git
+.git
+.gitignore
+
+# IDE files
+.idea
+.vscode
+
+# Testing
+coverage
+.nyc_output
+test
+
+# Environment variables
+.env
+.env.*
+
+# Other
+README.md
+todo.md
