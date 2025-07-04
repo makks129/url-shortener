@@ -39,10 +39,10 @@ async function plugin(fastify: FastifyInstance) {
 	});
 
 	// Run migrations
-	// await knexInstance.migrate.latest({
-	// 	directory: path.join(__dirname, '../migrations'),
-	// 	loadExtensions: [process.env.NODE_ENV === 'test' ? '.ts' : '.js'],
-	// });
+	await knexInstance.migrate.latest({
+		directory: path.join(__dirname, '../migrations'),
+		loadExtensions: [process.env.NODE_ENV === 'test' ? '.ts' : '.js'],
+	});
 
 	// Close the connection when Fastify shuts down
 	fastify.addHook('onClose', async (app) => {
