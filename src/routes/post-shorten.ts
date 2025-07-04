@@ -14,9 +14,9 @@ export async function postShorten(app: FastifyInstance) {
 			},
 		},
 		handler: async (req) => {
-			const { url } = req.body;
+			const { url, one_time: oneTime } = req.body;
 
-			const { code } = await createCodeForUrl(req, url);
+			const { code } = await createCodeForUrl(req, url, oneTime);
 
 			return { code };
 		},

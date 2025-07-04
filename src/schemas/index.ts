@@ -2,6 +2,7 @@ import { Static, Type } from '@fastify/type-provider-typebox';
 
 export const PostShortenBody = Type.Object({
 	url: Type.String({ format: 'uri' }),
+	one_time: Type.Optional(Type.Boolean()),
 });
 
 export const PostShortenResponse = Type.Object({
