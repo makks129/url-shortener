@@ -23,6 +23,8 @@ export async function postShorten(app: FastifyInstance) {
 
 			const { code } = await createCodeForUrl(req, url, oneTime);
 
+			req.server.customMetrics.urlShortenCounter.inc({ one_time: oneTime ? 'true' : 'false' });
+
 			return { code };
 		},
 	});

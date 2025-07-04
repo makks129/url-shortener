@@ -46,6 +46,7 @@ export async function getUrlByCode(req: FastifyRequest, code: string): Promise<G
 
 		if (!res) {
 			req.log.debug(`URL not found for short link code: ${JSON.stringify({ code })}`);
+			req.server.customMetrics.urlAccessCounter.inc({ status: 'not_found' });
 			throw new NotFoundError();
 		}
 
@@ -54,6 +55,7 @@ export async function getUrlByCode(req: FastifyRequest, code: string): Promise<G
 			req.log.debug(
 				`Short link is expired: ${JSON.stringify({ code, url: res.original_url, created_at: res.created_at })}`,
 			);
+			req.server.customMetrics.urlAccessCounter.inc({ status: 'expired' });
 			throw new GoneError();
 		}
 
@@ -66,6 +68,7 @@ export async function getUrlByCode(req: FastifyRequest, code: string): Promise<G
 					visits: res.visits,
 				})}`,
 			);
+			req.server.customMetrics.urlAccessCounter.inc({ status: 'one_time_already_visited' });
 			throw new GoneError();
 		}
 
@@ -84,6 +87,7 @@ export async function getAnalyticsByCode(req: FastifyRequest, code: string): Pro
 
 	if (!res) {
 		req.log.debug(`Analytics not found for short link code: ${JSON.stringify({ code })}`);
+		req.server.customMetrics.urlAnalyticsAccessCounter.inc({ status: 'not_found' });
 		throw new NotFoundError();
 	}
 

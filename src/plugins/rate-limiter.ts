@@ -64,6 +64,7 @@ async function plugin(fastify: FastifyInstance, options: RateLimiterOptions) {
 		// Check if rate limit exceeded, throw 429
 		if (counter.count > maxReqPerInverval) {
 			req.log.debug(`Rate limit reached!: ${JSON.stringify({ url: req.url, ip: req.ip })}`);
+			fastify.customMetrics.rateLimit429Counter.inc({ path: req.url });
 			throw new TooManyRequestsError();
 		}
 

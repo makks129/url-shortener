@@ -17,6 +17,8 @@ export async function getGoCodeAnalytics(app: FastifyInstance) {
 
 			const { visits } = await getAnalyticsByCode(req, code);
 
+			req.server.customMetrics.urlAnalyticsAccessCounter.inc({ status: 'success' });
+
 			return { visits };
 		},
 	});
