@@ -76,6 +76,10 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_INSTALL_PLUGINS=grafana-piechart-panel
+      # Reduce Grafana logging
+      - GF_LOG_MODE=console
+      - GF_LOG_LEVEL=error # Only show error logs (options: debug, info, warn, error, critical)
+      - GF_LOG_CONSOLE_FORMAT=text # More readable format instead of JSON
     depends_on:
       - prometheus
     networks:
