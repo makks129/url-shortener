@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import { GetGoCodeParams, PostShortenResponse } from '../schemas/index';
+import { GetGoCodeParams } from '../schemas/index';
 import { getUrlByCode } from '../managers/urls';
 
 export async function getGoCode(app: FastifyInstance) {
@@ -9,7 +9,7 @@ export async function getGoCode(app: FastifyInstance) {
 		schema: {
 			params: GetGoCodeParams,
 			response: {
-				200: PostShortenResponse,
+				302: {},
 			},
 		},
 		handler: async (req, reply) => {

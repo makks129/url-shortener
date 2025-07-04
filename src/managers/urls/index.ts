@@ -63,3 +63,17 @@ export async function getUrlByCode(req: FastifyRequest, code: string): Promise<G
 		return { url: res.original_url };
 	});
 }
+
+type GetAnalyticsByCodeResponse = {
+	visits: number;
+};
+
+export async function getAnalyticsByCode(req: FastifyRequest, code: string): Promise<GetAnalyticsByCodeResponse> {
+	const res = await req.db('urls').select('visits').where('code', code).first();
+
+	if (!res) {
+		throw new NotFoundError();
+	}
+
+	return { visits: res.visits };
+}
