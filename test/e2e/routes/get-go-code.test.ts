@@ -62,7 +62,6 @@ describe('GET /go/:code', () => {
 	});
 
 	it('returns 410 when the link is expired', async () => {
-		// First, create a new shortened URL
 		const validUrl = 'http://www.example-expired.com';
 		const postShortenResp = await app.inject({
 			method: 'POST',
@@ -86,5 +85,34 @@ describe('GET /go/:code', () => {
 		});
 
 		expect(resp.statusCode).toBe(410);
+	});
+
+	it('returns 302 and then 410 when one-time link is visited twice', async () => {
+		const validUrl = 'http://www.example.com';
+		const postShortenResp = await app.inject({
+			method: 'POST',
+			url: '/shorten',
+			payload: {
+				url: validUrl,
+				one_time: true, // Make it a one-time link!
+			},
+		});
+		const postShortenJson = await postShortenResp.json();
+
+		// Access one-time link once
+		const get1 = await app.inject({
+			method: 'GET',
+			url: `/go/${postShortenJson.code}`,
+		});
+
+		expect(get1.statusCode).toBe(302);
+
+		// Access one-time link twice
+		const get2 = await app.inject({
+			method: 'GET',
+			url: `/go/${postShortenJson.code}`,
+		});
+
+		expect(get2.statusCode).toBe(410);
 	});
 });
