@@ -16,6 +16,7 @@ services:
     environment:
       - NODE_ENV=development
       - NODE_OPTIONS=--inspect=0.0.0.0:9229
+      - LOG_LEVEL=debug
       - DB_HOST=mysql
       - DB_PORT=3306
       - DB_USER=url-shortener

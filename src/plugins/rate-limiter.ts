@@ -33,16 +33,16 @@ async function plugin(fastify: FastifyInstance, options: RateLimiterOptions) {
 	});
 
 	// Add a hook to check rate limits before handling each request
-	fastify.addHook('preHandler', async (request: FastifyRequest, reply: FastifyReply) => {
+	fastify.addHook('preHandler', async (req: FastifyRequest, reply: FastifyReply) => {
 		// Check route schema definition to find rate limits
-		const { schema } = request.routeOptions;
+		const { schema } = req.routeOptions;
 		if (!schema || !schema.rateLimits) {
 			// No rate limits defined for this route
 			return;
 		}
 
 		// Saving rate limit by IP address
-		const key = request.ip || 'unknown';
+		const key = req.ip || 'unknown';
 		// Get rate limit value for this endpoint
 		const maxReqPerInverval = schema.rateLimits.maxReqPerInverval || options.defaults.maxReqPerInverval;
 
@@ -63,6 +63,7 @@ async function plugin(fastify: FastifyInstance, options: RateLimiterOptions) {
 
 		// Check if rate limit exceeded, throw 429
 		if (counter.count > maxReqPerInverval) {
+			req.log.debug(`Rate limit reached!: ${JSON.stringify({ url: req.url, ip: req.ip })}`);
 			throw new TooManyRequestsError();
 		}
 

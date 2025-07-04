@@ -8,8 +8,6 @@ async function startApp() {
 		const host = process.env.HOST || '0.0.0.0';
 
 		app.listen({ port, host });
-
-		console.log(`Server is running at http://${host}:${port}`);
 	} catch (error) {
 		console.error('Error starting server:', error);
 		process.exit(1);

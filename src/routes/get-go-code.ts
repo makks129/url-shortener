@@ -17,6 +17,8 @@ export async function getGoCode(app: FastifyInstance) {
 
 			const { url } = await getUrlByCode(req, code);
 
+			req.log.debug(`Found original URL by short link code, redirecting: ${JSON.stringify({ code, url })}`);
+
 			return reply.redirect(url);
 		},
 	});

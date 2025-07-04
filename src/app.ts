@@ -4,9 +4,13 @@ import db from './plugins/db';
 import rateLimiter from './plugins/rate-limiter';
 import { routes } from './routes';
 import { DEFAULT_RATE_LIMITS_REQS } from './configs';
+import { logger } from './plugins/logger';
 
 export async function buildApp(): Promise<FastifyInstance> {
-	const app = fastify();
+	const app = fastify({
+		logger,
+		disableRequestLogging: true, // disabled automatic request logging
+	});
 
 	app.withTypeProvider<TypeBoxTypeProvider>();
 

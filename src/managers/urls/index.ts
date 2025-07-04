@@ -24,6 +24,8 @@ export async function createCodeForUrl(
 		.onConflict('code')
 		.ignore();
 
+	req.log.debug(`Created code for URL: ${JSON.stringify({ url, code, oneTime })}`);
+
 	return { code };
 }
 
@@ -43,16 +45,27 @@ export async function getUrlByCode(req: FastifyRequest, code: string): Promise<G
 			.first();
 
 		if (!res) {
+			req.log.debug(`URL not found for short link code: ${JSON.stringify({ code })}`);
 			throw new NotFoundError();
 		}
 
 		const isCodeOlderThan24Hours = new Date(res.created_at).getTime() < Date.now() - SHORT_URL_EXPIRATION_TIME_MS;
 		if (isCodeOlderThan24Hours) {
+			req.log.debug(
+				`Short link is expired: ${JSON.stringify({ code, url: res.original_url, created_at: res.created_at })}`,
+			);
 			throw new GoneError();
 		}
 
 		const alreadyVisitedOneTimeCode = res.one_time && res.visits > 0;
 		if (alreadyVisitedOneTimeCode) {
+			req.log.debug(
+				`One-time short link has already been visited : ${JSON.stringify({
+					code,
+					url: res.original_url,
+					visits: res.visits,
+				})}`,
+			);
 			throw new GoneError();
 		}
 
@@ -70,6 +83,7 @@ export async function getAnalyticsByCode(req: FastifyRequest, code: string): Pro
 	const res = await req.db('urls').select('visits').where('code', code).first();
 
 	if (!res) {
+		req.log.debug(`Analytics not found for short link code: ${JSON.stringify({ code })}`);
 		throw new NotFoundError();
 	}
 
