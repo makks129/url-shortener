@@ -60,4 +60,31 @@ describe('GET /go/:code', () => {
 		expect(resp.statusCode).toBe(302);
 		expect(resp.headers.location).toBe(validUrl);
 	});
+
+	it('returns 410 when the link is expired', async () => {
+		// First, create a new shortened URL
+		const validUrl = 'http://www.example-expired.com';
+		const postShortenResp = await app.inject({
+			method: 'POST',
+			url: '/shorten',
+			payload: {
+				url: validUrl,
+			},
+		});
+		const postShortenJson = await postShortenResp.json();
+
+		// Set created_at to more than 24 hours ago (25 hours)
+		const pastDate = new Date(Date.now() - 25 * 60 * 60 * 1000);
+		await app.db('urls').where('code', postShortenJson.code).update({
+			created_at: pastDate,
+		});
+
+		// Now try to access the expired link
+		const resp = await app.inject({
+			method: 'GET',
+			url: `/go/${postShortenJson.code}`,
+		});
+
+		expect(resp.statusCode).toBe(410);
+	});
 });
