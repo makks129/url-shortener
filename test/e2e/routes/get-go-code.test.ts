@@ -51,6 +51,10 @@ describe('GET /go/:code', () => {
 		});
 		const postShortenJson = await postShortenResp.json();
 
+		// Check that visits are initially 0
+		const query1Res = await app.db('urls').select('visits').where('code', postShortenJson.code).first();
+		expect(query1Res.visits).toEqual(0);
+
 		const resp = await app.inject({
 			method: 'GET',
 			url: `/go/${postShortenJson.code}`,
@@ -59,6 +63,10 @@ describe('GET /go/:code', () => {
 		// Checking API response
 		expect(resp.statusCode).toBe(302);
 		expect(resp.headers.location).toBe(validUrl);
+
+		// Checking that visits are incremented as well
+		const query2Res = await app.db('urls').select('visits').where('code', postShortenJson.code).first();
+		expect(query2Res.visits).toEqual(1);
 	});
 
 	it('returns 410 when the link is expired', async () => {
