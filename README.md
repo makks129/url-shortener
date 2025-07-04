@@ -119,7 +119,7 @@ curl "localhost:3000/go/<code>/analytics"
 ### API
 ```mermaid
 flowchart LR
-    Client -->|POST /shorten body={url}| API
+    Client -->|POST /shorten| API
     Client -->|GET /go/:code| API
     Client -->|GET /go/:code/analytics| API
 
